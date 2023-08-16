@@ -1,11 +1,11 @@
-# `injection`
+# `web`
 
 > TODO: description
 
 ## Usage
 
 ```
-const injection = require('injection');
+const web = require('web');
 
 // TODO: DEMONSTRATE API
 ```

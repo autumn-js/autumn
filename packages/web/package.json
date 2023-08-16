@@ -1,7 +1,7 @@
 {
-  "name": "@autumn-js/injection",
+  "name": "@autumn-js/web",
   "version": "0.0.0",
-  "description": "Injection System for AutumnJS",
+  "description": "Web System for AutumnJS",
   "author": "Ben Davies <me@bdavies.net>",
   "homepage": "https://github.com/autumn-js/autumn#readme",
   "license": "MIT",
