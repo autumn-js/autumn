@@ -45,6 +45,24 @@ describe('Express Provider Integration Tests', () => {
         expect(res.body).toHaveProperty('world');
     });
 
+    it('should return hello world xml', async () => {
+        provider.registerEndpoint({
+            type: "GET",
+            uri: '/hello',
+            async handler(_req, res) {
+                res.contentType('application/xml');
+                res.send("<hello>true</hello><world>true</world>");
+            },
+            middleware: []
+        });
+
+        const res = await request(app)
+            .get('/hello');
+
+        expect(res.type).toBe('application/xml');
+        expect(res.text).toBe('<hello>true</hello><world>true</world>');
+    });
+
     it('should handle path params', async () => {
         provider.registerEndpoint({
             type: "GET",
@@ -114,6 +132,79 @@ describe('Express Provider Integration Tests', () => {
             .send({
                 id: 'SomeID'
             });
+        expect(res.body).toHaveProperty('id');
+        expect(res.body.id).toBe('SomeID');
+    });
+
+    it('should handle POST Body XML', async () => {
+        provider.registerEndpoint({
+            type: "POST",
+            uri: '/hello',
+            async handler(req, res) {
+                res.send({id: req.body.id});
+            },
+            middleware: []
+        });
+
+        const res = await request(app)
+            .post('/hello')
+            .set('Content-Type', 'application/xml')
+            .send("<id>SomeID</id>");
+        expect(res.body).toHaveProperty('id');
+        expect(res.body.id).toBe('SomeID');
+    });
+
+    it('should handle POST Body Form Data', async () => {
+        provider.registerEndpoint({
+            type: "POST",
+            uri: '/hello',
+            async handler(req, res) {
+                res.send({id: req.body.id});
+            },
+            middleware: []
+        });
+
+        const res = await request(app)
+            .post('/hello')
+            .field('id', 'SomeID');
+        expect(res.body).toHaveProperty('id');
+        expect(res.body.id).toBe('SomeID');
+    });
+
+    it('should throw Error POST Body Form Data With File no file option', async () => {
+        provider.registerEndpoint({
+            type: "POST",
+            uri: '/hello',
+            async handler(req, res) {
+                res.send({id: req.body.id});
+            },
+            middleware: []
+        });
+        const b = Buffer.from("Test");
+
+        const res = await request(app)
+            .post('/hello')
+            .field('id', 'SomeID')
+            .attach('html', b, {filename: 'test.html'})
+
+        expect(res.status).toBe(500);
+        expect(res.body.name).toBe('MulterError');
+    });
+
+    it('should handle POST Body UrlEncoded', async () => {
+        provider.registerEndpoint({
+            type: "POST",
+            uri: '/hello',
+            async handler(req, res) {
+                res.send({id: req.body.id});
+            },
+            middleware: []
+        });
+
+        const res = await request(app)
+            .post('/hello')
+            .type('application/x-www-form-urlencoded')
+            .send('id=SomeID');
         expect(res.body).toHaveProperty('id');
         expect(res.body.id).toBe('SomeID');
     });

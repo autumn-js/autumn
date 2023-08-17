@@ -27,6 +27,10 @@ export type CallbackType = () => Promise<void> | void;
  */
 export type Route = string;
 
+export type FileOption = {name: string, maxCount?: number};
+
+export type FileOptions = string | string[] | FileOption | FileOptions[] | (string | FileOption)[];
+
 /**
  * The endpoint options that describe the endpoint to the provider accepting the request
  */
@@ -35,6 +39,8 @@ export interface EndpointOptions {
     readonly uri: Route;
     readonly middleware: HttpExchangeMiddleware[];
     readonly handler: HttpExchangeCallbackHandler;
+    readonly files?: FileOptions;
+    readonly fileDestination?: string;
 }
 
 /**

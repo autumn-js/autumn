@@ -140,11 +140,11 @@ describe('Express Provider', () => {
 describe('Express Provider Factory', () => {
     it('should create a express provider with the express app and run the bootstrap', () => {
         const PORT = 3000;
-        ExpressProviderFactory.makeProvider({port: PORT, onReady: undefined});
+        new ExpressProviderFactory().makeProvider({port: PORT, onReady: undefined});
         expect(expressAppGlobal.listen).toHaveBeenCalledWith(PORT, undefined);
 
         const cb = () => {};
-        ExpressProviderFactory.makeProvider({port: PORT, onReady: cb});
+        new ExpressProviderFactory().makeProvider({port: PORT, onReady: cb});
         expect(expressAppGlobal.listen).toHaveBeenCalledWith(PORT, cb);
     });
 });
